@@ -1,4 +1,5 @@
 <?php
+
 class EtaTmsSyncAssignmentHandler {
     /**
      * Sets plugin managers
@@ -7,13 +8,16 @@ class EtaTmsSyncAssignmentHandler {
      */
 
     public function assignmentAdd($hook_data){
-        //TODO: sync $hook_data['assignment']['customerid'];
-        $cmd = ETATMSBIN
+        EtaTmsSync::runCustomerSync($hook_data['assignment']['customerid']);
         return $hook_data;
     }
 
     public function assignmentEdit($hook_data){
-        //TODO: sync $hook_data['customerid'];
+        EtaTmsSync::runCustomerSync($hook_data['a']['customerid']);
+        return $hook_data;
+    }
+
+    public function assginmentDel($hook_data){
         return $hook_data;
     }
 }

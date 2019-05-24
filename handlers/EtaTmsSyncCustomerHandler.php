@@ -7,17 +7,17 @@ class EtaTmsSyncCustomerHandler {
    */
 
   public function customerEditAfterSubmit(array $hook_data = array()){
-    //TODO: sync $hook_data['customerdata']['id'];
+    EtaTmsSync::runCustomerSync($hook_data['customerdata']['id']);
     return $hook_data;
   }
 
   public function customerAddAfterSubmit(array $hook_data = array()){
-    //TODO: sync $hook_data['id'];
+    EtaTmsSync::runCustomerSync($hook_data['id']);
     return $hook_data;
   }
 
   public function customerDeleteAfterSubmit($hook_data){
-    //TODO: sync $hook_data['id'];
+    EtaTmsSync::runCustomerSync($hook_data['id']);
     return $hook_data;
   }
 

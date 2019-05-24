@@ -1,4 +1,5 @@
 <?php
+
 class EtaTmsSyncNodeHandler {
     /**
      * Sets plugin managers
@@ -6,24 +7,27 @@ class EtaTmsSyncNodeHandler {
      * 
      */
 
+
     public function nodeAddAfterSubmit($hook_data){
-        //TODO sync $hook_data['nodeadd']['customerid'];
+        EtaTmsSync::runCustomerSync($hook_data['nodeadd']['customerid']);
         return $hook_data;
     }
 
     public function nodeEditAfterSubmit($hook_data){
-        //TODO sync $hook_data['nodeedit']['customerid'];
+        EtaTmsSync::runCustomerSync($hook_data['nodeedit']['customerid']);
         return $hook_data;
     }
 
     public function nodeDelAfterSubmit($hook_data){
-        //TODO sync $hook_data['ownerid'];
+        EtaTmsSync::runCustomerSync($hook_data['ownerid']);
         return $hook_data;
     }
 
     public function nodeSetAfterSubmit($hook_data){
-        //TODO sync $hook_data['nodeid'];
-        return $hook_data //????
+        global $LMS;
+        $owner = $LMS->GetNodeOwner($hook_data['nodeid']);
+        EtaTmsSync::runCustomerSync($owner);
+        return $hook_data;
     }
 }
 ?>
