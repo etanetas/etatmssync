@@ -24,15 +24,15 @@ class EtaTmsSyncInitHandler {
 				'prio' => 11,
 				'submenu' => array(
 					array(
-						'name' => trans('Tv plans'),
-						'link' => '?m=etatmssyncplans',
-						'tip' => trans('Assign tvip and lms plans'),
+						'name' => trans('Tarrifs'),
+						'link' => '?m=etatmssynctariffs',
+						'tip' => trans('Assign tvip and lms tarrifs'),
 						'prio' => 10,
 					),
 					array(
-						'name' => trans('Servers'),
+						'name' => trans('Configuration'),
 						'link' => '?m=etatmssyncconfig',
-						'tip' => trans('Tms Servers'),
+						'tip' => trans('Tms Sync plugin configurations'),
 						'prio' => 20,
 					),
 				),

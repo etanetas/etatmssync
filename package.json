@@ -1,0 +1,23 @@
+{
+  "name": "etatmssync",
+  "version": "1.0.0",
+  "description": "instalation create log file (touch /var/log/tms_sync.log) add permission for web server write to this file (chown www-data.www-data /var/log/tms_sync.log && chmod 0644 /var/log/tms_sync.log)",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc",
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/etanetas/etatmssync.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/etanetas/etatmssync#readme",
+  "dependencies": {
+    "webpack": "^4.32.2"
+  }
+}
