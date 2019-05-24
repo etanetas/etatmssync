@@ -12,9 +12,14 @@ class EtaTmsSync extends LMSPlugin {
 	const PLUGIN_NAME = 'Tms Sync';
 	const PLUGIN_DESCRIPTION = 'Etanetas plugin for lms->tms synchronization';
     const PLUGIN_AUTHOR = 'Ksistof Vinco, Darius Urbonas';
+    const PLUGIN_DBVERSION = '2019050100';
+
+    // public static $plugindir = dirname(_FILE__);
+    public static $plugindir = null;
     
     public function registerHandlers()
     {
+        EtaTmsSync::$plugindir = dirname(__FILE__);
 
         $configfile = file_exists(getcwd().DIRECTORY_SEPARATOR.'lms.ini') ? getcwd().DIRECTORY_SEPARATOR.'lms.ini' : "/etc/lms/lms.ini";
 
@@ -24,6 +29,18 @@ class EtaTmsSync extends LMSPlugin {
             'access_table_initialized' => array(
                 'class' => 'EtaTmsSyncInitHandler',
                 'method' => 'accessTableInit'
+            ),
+            'menu_initialized' => array(
+                'class' => 'EtaTmsSyncInitHandler',
+                'method' => 'menuInit'
+            ),
+			'modules_dir_initialized' => array(
+				'class' => 'EtaTmsSyncInitHandler',
+				'method' => 'modulesDirInit'
+            ),
+            'smarty_initialized' => array(
+                'class' => 'EtaTmsSyncInitHandler',
+                'method' => 'smartyInit'
             ),
             'customeredit_after_submit' => array(
                 'class' => 'EtaTmsSyncCustomerHandler',
