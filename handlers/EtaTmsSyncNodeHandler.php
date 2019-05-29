@@ -27,6 +27,7 @@ class EtaTmsSyncNodeHandler {
         global $LMS;
         if($hook_data['nodeid']){
             $owner = $LMS->GetNodeOwner($hook_data['nodeid']);
+            EtaTmsSync::runCustomerSync($owner);
         } else if($hook_data['nodes']){
             $owners = array();
             foreach($hook_data['nodes'] as $node){
