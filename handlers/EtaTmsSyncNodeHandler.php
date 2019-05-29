@@ -25,8 +25,20 @@ class EtaTmsSyncNodeHandler {
 
     public function nodeSetAfterSubmit($hook_data){
         global $LMS;
-        $owner = $LMS->GetNodeOwner($hook_data['nodeid']);
-        EtaTmsSync::runCustomerSync($owner);
+        if($hook_data['nodeid']){
+            $owner = $LMS->GetNodeOwner($hook_data['nodeid']);
+        } else if($hook_data['nodes']){
+            $owners = array();
+            foreach($hook_data['nodes'] as $node){
+                $owner = $LMS->GetNodeOwner($node);
+                if(!in_array($owner, $owners)){
+                    array_push($owners, $owner);
+                }
+            }
+            foreach($owners as $owner){
+                EtaTmsSync::runCustomerSync($owner);
+            }
+        } 
         return $hook_data;
     }
 }
