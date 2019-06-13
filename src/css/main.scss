@@ -58,9 +58,9 @@
       padding-right: 10px;
       display: inline-flex;
     }
-    // &_content{
-    //   border: 1px solid black;
-    // }
+    &_content{
+      max-height: 600px;
+    }
     &_header{
       display: block;
       background: #CEBD9B;
