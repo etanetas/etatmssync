@@ -1,0 +1,62 @@
+{extends file="layout.html"}
+{block name=title}TmsSync server management{/block}
+{block name=module_content}
+
+{literal}
+<% Object.keys(htmlWebpackPlugin.files.chunks).forEach(function(chunk){ %>
+  <% if(htmlWebpackPlugin.files.chunks[chunk].css.length > 0){ %>
+    <link href="<%= htmlWebpackPlugin.options.cssPublicPath + htmlWebpackPlugin.files.chunks[chunk].hash %>.css" rel="stylesheet" />
+  <% } %>
+<%})%>
+{/literal}
+<H1>{$layout.pagetitle}</H1>
+<div class="etatms_tariffs_view">
+  <div class="etatms_header">
+    <div class="etatms_header_title">TMS - LMS Tariffs sync</div>
+    <button class="etatms_header_syncbutton">Sync middleware</button>
+  </div>
+  <div class="etatms_tariffs_header">
+    <div class="etatms_tariffs_tmsid etatms_tariffs_header_tmsid">
+      <div class="etatms_tariffs_new etatms_tariffs_tmstariff_add etatms_button">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+      </div>
+      Tms Tariff
+    </div>
+    <div class="etatms_tariffs_header_lmsids etatms_tariffs_lmsids">Lms Tariffs(id)</div>
+  </div>
+  <div class="etatms_tariffs_content">
+    {foreach from=$sync_tariffs key=$k item=$v}
+    <div class="etatms_tariffs_row" data-etatms-tmsname="{$v['tmsTariff']['tarif_name']}" data-etatms-tmsid="{$v['tmsTariff']['id']}" data-etatms-id="{$v['id']}">
+      <div class="etatms_tariffs_tmsid">
+
+        <div class="etatms_tariffs_tmsname">
+          {$v['tmsTariff']['tarif_name']}
+        </div>
+        <div class="etatms_tariffs_tmsbuttons">
+          <!-- <i class="fa fa-spinner fa-spin etatms_tariff_commit_loader"></i> -->
+          <div class="etatms_tariffs_tmsbuttons_commit">
+            <a href class="etatms_tariffs_tmstariff_commit etatms_button">commit</a>
+            <a href class="etatms_tariffs_tmstariff_reset etatms_button">reset</a>
+          </div>
+          <i class="fa fa-minus etatms_tariffs_tmstariff_delete etatms_button" aria-hidden="true"></i>
+        </div>
+      </div>
+      <div class="etatms_tariffs_lmsids" >
+        {foreach from=$v['lmsTariffs'] key=$lk item=$lv}
+          <div class="etatms_tariffs_lmstariff" data-etatms-lmsname="{$lv['name']}" data-etatms-lmsid="{$lv['id']}">
+            {$lv['name']}({$lv['id']}) <div class="etatms_button etatms_tariffs_lmstariff_delete"><i class="fa fa-minus" aria-hidden="true"></i></div>
+          </div>
+        {/foreach}
+        <div class="etatms_tariffs_lmstariff etatms_tariffs_lmstariff_add etatms_button etatms_button-add" ><i class="fa fa-plus" aria-hidden="true"></i></div>
+      </div>
+    </div>
+    {/foreach}
+  </div>
+</div>
+<div class="test"></div>
+{literal}
+<% Object.keys(htmlWebpackPlugin.files.chunks).forEach(function(chunk){ %>
+  <script src="<%= htmlWebpackPlugin.options.jsPublicPath + htmlWebpackPlugin.files.chunks[chunk].hash %>.js"></script>
+<%})%>
+{/literal}
+{/block}

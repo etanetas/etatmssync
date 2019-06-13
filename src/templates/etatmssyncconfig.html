@@ -1,8 +1,42 @@
 {extends file="layout.html"}
 {block name=title}TmsSync server management{/block}
 {block name=module_content}
+
+{literal}
+<% Object.keys(htmlWebpackPlugin.files.chunks).forEach(function(chunk){ %>
+  <% if(htmlWebpackPlugin.files.chunks[chunk].css.length > 0){ %>
+    <link href="<%= htmlWebpackPlugin.options.cssPublicPath + htmlWebpackPlugin.files.chunks[chunk].hash %>.css" rel="stylesheet" />
+  <% } %>
+<%})%>
+{/literal}
 <H1>{$layout.pagetitle}</H1>
-<div>
-  config test 2
+<div class="etatms_settings_view">
+  <form method="post" id="settings">
+  <div class="etatms_header">Tms Sync Settings</div>
+  {foreach from=$settings key=k item=v}
+  {if $k == "id"}
+    <input type="hidden" value={$v.value} name={$k} />
+  {else}
+  <div class="etatms_row">
+    <label>
+    <div class="etatms_column_label">{$v.label}</div>
+    {if $v.label == "password"}
+      <div class="etatms_column_value"><input class="etatms_input" type="password" name={$k} value={$v.value} /></div>
+    {else}
+      <div class="etatms_column_value"><input class="etatms_input" type="text" name={$k} value={$v.value} /></div>
+    {/if}
+    </label>
+  </div>
+  {/if}
+  {/foreach}
+  <div class="etatms_row">
+    <input class="etatms_button etatms_submit" type="submit" value="Submit"/>
+  </div>
+  </form>
 </div>
+{literal}
+<% Object.keys(htmlWebpackPlugin.files.chunks).forEach(function(chunk){ %>
+  <script src="<%= htmlWebpackPlugin.options.jsPublicPath + htmlWebpackPlugin.files.chunks[chunk].hash %>.js"></script>
+<%})%>
+{/literal}
 {/block}

@@ -1,0 +1,165 @@
+.etatms_searchbox_input {
+  box-sizing: border-box;
+  padding-right: 20px;
+  resize: horizontal;
+  background-position: 14px 12px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  padding: 14px 20px 12px 45px;
+  border: none;
+  border-bottom: 1px solid #ddd; }
+
+.etatms_searchbox_input:focus {
+  outline: 3px solid #ddd; }
+
+.etatms_searchbox {
+  position: relative;
+  display: inline-block; }
+
+.etatms_searchbox-selected {
+  background-color: #ddd; }
+
+.etatms_searchbox-content {
+  display: none;
+  position: absolute;
+  overflow-y: auto;
+  background-color: #f6f6f6;
+  min-width: 230px;
+  max-height: 300px;
+  overflow: auto;
+  border: 1px solid #ddd;
+  z-index: 1; }
+
+.etatms_searchbox-content_show {
+  display: block; }
+
+.etatms_searchbox-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block; }
+
+.etatms_searchbox-loading {
+  display: none;
+  margin-left: -20px; }
+
+.etatms_searchbox-loading_show {
+  display: inline-block; }
+
+
+.etatms_settings_view, .etatms_tariffs_view {
+  margin: 0 auto; }
+
+.etatms_button {
+  cursor: pointer;
+  padding: 2px; }
+
+.etatms_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 0.2em; }
+  .etatms_header_title {
+    display: inline-flex; }
+  .etatms_header_syncbutton {
+    display: inline-flex;
+    cursor: pointer;
+    color: #A5673F !important;
+    border-color: #A5673F !important;
+    outline: none;
+    align-items: center;
+    user-select: none;
+    text-decoration: none;
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    letter-spacing: 0.02857em;
+    line-height: 1.75;
+    border-radius: 0.28571429rem;
+    font-weight: 500;
+    font-family: "Roboto","Helvetica","Arial", sans-serif;
+    box-sizing: border-box;
+    min-width: 64px;
+    font-size: 0.875rem;
+    background: transparent; }
+    .etatms_header_syncbutton_error {
+      color: #DB2828 !important;
+      border-color: #DB2828 !important; }
+
+.etatms_row {
+  width: 80%;
+  padding: 5px; }
+  .etatms_row-centered {
+    margin: 0 auto;
+    text-align: center; }
+
+.etatms_tariffs_new {
+  padding-right: 10px;
+  display: inline-flex; }
+
+.etatms_tariffs_header {
+  display: block;
+  background: #CEBD9B;
+  border: 1px solid black;
+  padding: 5px 0; }
+  .etatms_tariffs_header_tmsid {
+    justify-content: start !important; }
+  .etatms_tariffs_header_lmsids {
+    justify-content: start !important; }
+
+.etatms_tariffs_row {
+  display: flex;
+  border-bottom: 1px dotted grey; }
+
+.etatms_tariffs_row:nth-child(even) {
+  background-color: #DFD5BD; }
+
+.etatms_tariffs_tmsid {
+  display: inline-flex;
+  width: 19%;
+  align-items: center;
+  padding-left: 10px;
+  justify-content: space-between; }
+
+.etatms_tariffs_lmsids {
+  align-items: center;
+  display: inline-flex;
+  flex-wrap: wrap; }
+
+.etatms_tariffs_tmsbuttons {
+  display: inline-block;
+  padding-right: 20px; }
+  .etatms_tariffs_tmsbuttons i {
+    margin-left: 2px;
+    margin-right: 2px; }
+  .etatms_tariffs_tmsbuttons_commit {
+    display: none; }
+    .etatms_tariffs_tmsbuttons_commit-show {
+      display: inline-block; }
+
+.etatms_tariffs_lmsids {
+  width: 80%; }
+
+.etatms_tariffs_lmstariff {
+  padding: 2px 5px;
+  position: relative;
+  margin: 2px;
+  border-radius: .25rem;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  display: inline-block; }
+  .etatms_tariffs_lmstariff_delete {
+    display: inline-block;
+    padding-left: 5px; }
+
+.etatms_column_label, .etatms_column_value {
+  display: inline-block; }
+
+.etatms_column_label {
+  width: 10%;
+  text-align: right;
+  padding-right: 10px; }
+
+.etatms_column_value {
+  text-align: left;
+  padding-left: 10px; }
+

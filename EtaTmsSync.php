@@ -23,6 +23,7 @@ class EtaTmsSync extends LMSPlugin {
 
         $configfile = file_exists(getcwd().DIRECTORY_SEPARATOR.'lms.ini') ? getcwd().DIRECTORY_SEPARATOR.'lms.ini' : "/etc/lms/lms.ini";
 
+        define('ETATMSBINSTDOUT', "export LANG=en_US.UTF-8 && " . dirname(__FILE__). DIRECTORY_SEPARATOR .'bin' . DIRECTORY_SEPARATOR. "sync");
         define('ETATMSBIN', "export LANG=en_US.UTF-8 && nohup " . dirname(__FILE__). DIRECTORY_SEPARATOR .'bin' . DIRECTORY_SEPARATOR . "sync -c $configfile %s > /dev/null 2>&1 &");
 
         $this->handlers = array(
@@ -83,6 +84,19 @@ class EtaTmsSync extends LMSPlugin {
                 'method' => 'nodeDelAfterSubmit'
             )
         );
+    }
+
+    public static function runMiddlewareSync(){
+        $return_code = -1;
+        $out = [];
+        $cmd= ETATMSBINSTDOUT;
+        var_dump($cmd);
+        exec($cmd, $out, $return_code);
+        if($return_code != 0){
+            error_log("ETATMSSYNC Error: Failed to run $cmd,\n returned code: $return_code,\n output: ".implode(" ", $out));
+            throw new Exception($out);
+        }
+        return implode($cmd);
     }
 
     public static function runCustomerSync($customerid){
