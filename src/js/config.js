@@ -1,9 +1,10 @@
 import "../css/main.scss";
 
-var settingsForm = document.querySelector("#settings");
+window.onload = function(){
+  var settingsForm = document.querySelector("#settings");
 
-settingsForm.addEventListener("submit", function(e){
-  e.preventDefault();
-  console.log("sss")
-  e.target.submit();
-});
+  settingsForm.addEventListener("submit", function(e){
+    e.preventDefault();
+    e.target.submit();
+  });
+}

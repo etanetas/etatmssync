@@ -2,7 +2,7 @@ import TmsTariff from "./tmsTariff/tmsTariff";
 import axios from "axios";
 import {TmsObj, createAddLmsTariffElement, commitTariff, addLmsTariff, eventRemoveLmsTariff, filterLmsTariffs, getFirstParentByClass} from "./common";
 import "../css/main.scss";
-
+window.onload = function(){
 let lmsTariffs = [
 ]
 
@@ -205,7 +205,7 @@ function eventAddTmsTariff(e){
       commitTariff(tmsRow)
       .then(r=>{
         const origRow = {
-          id: tmsRow.id, 
+          id: tmsRow.id,
           lmsTariffs:Object.assign([],tmsRow.lmsTariffs),
           el:tmsRow.el
         };
@@ -312,4 +312,4 @@ function commitTmsTariff(e, tariff){
 }
 
 init();
-window.tmsSync = tmsSync
+}
