@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const fs = require('fs');
 const glob = require('glob');
-const isDevel = false;
+const isDevel = true;
 const jsPublicPath = "/js/etatmssync/";
 const cssPublicPath = "/css/etatmssync/";
 

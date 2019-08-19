@@ -3,6 +3,8 @@ import axios from "axios";
 import {TmsObj, createAddLmsTariffElement, commitTariff, addLmsTariff, eventRemoveLmsTariff, filterLmsTariffs, getFirstParentByClass} from "./common";
 import "../css/main.scss";
 window.onload = function(){
+
+debugger;
 let lmsTariffs = [
 ]
 
