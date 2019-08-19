@@ -4,7 +4,6 @@ import {TmsObj, createAddLmsTariffElement, commitTariff, addLmsTariff, eventRemo
 import "../css/main.scss";
 window.onload = function(){
 
-debugger;
 let lmsTariffs = [
 ]
 
