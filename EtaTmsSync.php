@@ -23,8 +23,8 @@ class EtaTmsSync extends LMSPlugin {
 
         $configfile = file_exists(getcwd().DIRECTORY_SEPARATOR.'lms.ini') ? getcwd().DIRECTORY_SEPARATOR.'lms.ini' : "/etc/lms/lms.ini";
 
-        define('ETATMSBINSTDOUT', "export LANG=en_US.UTF-8 && " . dirname(__FILE__). DIRECTORY_SEPARATOR .'bin' . DIRECTORY_SEPARATOR. "sync");
-        define('ETATMSBIN', "export LANG=en_US.UTF-8 && nohup " . dirname(__FILE__). DIRECTORY_SEPARATOR .'bin' . DIRECTORY_SEPARATOR . "sync -c $configfile %s > /dev/null 2>&1 &");
+        define('ETATMSBINSTDOUT', "export LANG=en_US.UTF-8 && " . dirname(__FILE__). DIRECTORY_SEPARATOR .'bin' . DIRECTORY_SEPARATOR. "tms_sync".DIRECTORY_SEPARATOR."sync.py");
+        define('ETATMSBIN', "export LANG=en_US.UTF-8 && nohup " . dirname(__FILE__). DIRECTORY_SEPARATOR .'bin' . DIRECTORY_SEPARATOR . "tms_sync".DIRECTORY_SEPARATOR."sync.py -c $configfile %s > /dev/null 2>&1 &");
 
         $this->handlers = array(
             'access_table_initialized' => array(
