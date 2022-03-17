@@ -34,7 +34,7 @@ class Synchronizator(object):
                     query = (Assignment.select(Assignment.customerid, Node_Assignments.nodeid,
                                                Customer.name, Customer.lastname, Customer.pin)
                              .join_from(Assignment, Customer, on=(Assignment.customerid == Customer.id), attr='customer')
-                             .join_from(Assignment, Node_Assignments, join_type='LEFT',
+                             .join_from(Assignment, Node_Assignments, join_type='LEFT JOIN',
                                         on=(Assignment.id == Node_Assignments.assignmentid), attr='assignmentid')
                              .where(Assignment.tariffid == tariff,
                                     Assignment.customerid == id,
@@ -47,7 +47,7 @@ class Synchronizator(object):
                     query = (Assignment.select(Assignment.customerid, Node_Assignments.nodeid,
                                                Customer.name, Customer.lastname, Customer.pin)
                              .join_from(Assignment, Customer, on=(Assignment.customerid == Customer.id), attr='customer')
-                             .join_from(Assignment, Node_Assignments, join_type='LEFT',
+                             .join_from(Assignment, Node_Assignments, join_type='LEFT JOIN',
                                         on=(Assignment.id == Node_Assignments.assignmentid), attr='assignmentid')
                              .where(Assignment.tariffid == tariff,
                                     Assignment.datefrom < int(time.time()),
