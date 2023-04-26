@@ -14,6 +14,12 @@ class Config(object):
         help='Type id of LMS customer (one per call)'
     )
     parser.add_argument(
+        '-t',
+        '--test',
+        action='store_true',
+        help='test'
+    )
+    parser.add_argument(
         '-u',
         '--update',
         action='store_true',

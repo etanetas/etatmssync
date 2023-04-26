@@ -1,8 +1,8 @@
 #!/usr/bin/python3
-from lib.creep import Synchronizator
+from lib.creep import Main
 from config import Config
 
 cfg = Config()
-sync = Synchronizator()
+sync = Main()
 
 sync.main(cfg.args)
