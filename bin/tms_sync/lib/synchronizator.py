@@ -29,6 +29,8 @@ class Synchronizator(object):
 
     def customer_act(self, cust, login):
         name = '{} {}'.format(cust['lastname'], cust['name'])
+        name = name.replace("\"","")
+        name = name.replace("'","")
         cust_info = self.api.get_accounts(login)
         if cust_info['total'] > 0:
             pin = hashlib.md5(cust['pin'].encode())
