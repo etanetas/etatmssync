@@ -1,11 +1,6 @@
 <?php
 
 class EtaTmsSyncAssignmentHandler {
-    /**
-     * Sets plugin managers
-     * @param LMS $hook_data Hook data
-     * 
-     */
 
     public function assignmentAdd($hook_data){
         EtaTmsSync::runCustomerSync($hook_data['assignment']['customerid']);

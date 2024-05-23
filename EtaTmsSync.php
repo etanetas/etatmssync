@@ -4,21 +4,19 @@
  * Tms Sync Plugin
  *
  * @author Ksistof Vinco <ksistof.vinco@gmail.com>
- * @author Darius Urbonas
  */
 
 
 class EtaTmsSync extends LMSPlugin {
+    const PLUGIN_DIRECTORY_NAME = 'EtaTmsSync';
 	const PLUGIN_NAME = 'Tms Sync';
 	const PLUGIN_DESCRIPTION = 'Etanetas plugin for lms->tms synchronization';
-    const PLUGIN_AUTHOR = 'Ksistof Vinco, Darius Urbonas';
-    const PLUGIN_DBVERSION = '2019050100';
+    const PLUGIN_AUTHOR = 'Ksistof Vinco';
+    const PLUGIN_DB_VERSION = '2024051100';
 
-    // public static $plugindir = dirname(_FILE__);
     public static $plugindir = null;
     
-    public function registerHandlers()
-    {
+    public function registerHandlers(){
         EtaTmsSync::$plugindir = dirname(__FILE__);
 
         $configfile = file_exists(getcwd().DIRECTORY_SEPARATOR.'lms.ini') ? getcwd().DIRECTORY_SEPARATOR.'lms.ini' : "/etc/lms/lms.ini";
@@ -90,7 +88,6 @@ class EtaTmsSync extends LMSPlugin {
         $return_code = -1;
         $out = [];
         $cmd= ETATMSBINSTDOUT;
-        var_dump($cmd);
         exec($cmd, $out, $return_code);
         if($return_code != 0){
             error_log("ETATMSSYNC Error: Failed to run $cmd,\n returned code: $return_code,\n output: ".implode(" ", $out));

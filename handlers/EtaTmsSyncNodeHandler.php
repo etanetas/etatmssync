@@ -1,20 +1,14 @@
 <?php
 
 class EtaTmsSyncNodeHandler {
-    /**
-     * Sets plugin managers
-     * @param LMS $hook_data Hook data
-     * 
-     */
-
 
     public function nodeAddAfterSubmit($hook_data){
-        EtaTmsSync::runCustomerSync($hook_data['nodeadd']['customerid']);
+        EtaTmsSync::runCustomerSync($hook_data['nodeadd']['ownerid']);
         return $hook_data;
     }
 
     public function nodeEditAfterSubmit($hook_data){
-        EtaTmsSync::runCustomerSync($hook_data['nodeedit']['customerid']);
+        EtaTmsSync::runCustomerSync($hook_data['nodeedit']['ownerid']);
         return $hook_data;
     }
 

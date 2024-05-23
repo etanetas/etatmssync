@@ -43,5 +43,4 @@ EXCEPTION WHEN duplicate_table THEN
 END
 $$ LANGUAGE plpgsql;
 
-
 INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_EtaTmsSync', '2019050100');
