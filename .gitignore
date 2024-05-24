@@ -1,0 +1,4 @@
+__pycache__
+bin/tms_sync/customers_prev.pickle
+node_modules
+*LICENSE.txt

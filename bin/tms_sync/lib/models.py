@@ -67,6 +67,8 @@ class Tms_Settings(BaseModel):
     user = CharField()
     passwd = CharField()
     provider = IntegerField()
+    login_pattern = CharField()
+    sync_stb = BooleanField()
 
 
 class Tms_Plans(BaseModel):

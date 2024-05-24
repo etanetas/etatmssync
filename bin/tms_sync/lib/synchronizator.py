@@ -1,18 +1,23 @@
 import logging
 from lib.api import Api
 import hashlib
+import re
 
 logger = logging.getLogger(__name__)
-
 
 class Synchronizator(object):
     cust_plans = {}
     node_plans = {}
     node_macs = {}
-    obrabotano = []
+    done = []
     further_cust = []
+    login_pattern = "lms_%cid"
+    sync_stb = True
 
-    def __init__(self, host="", username="", password="", provider=0):
+    def __init__(self, host="", username="", password="", provider=0, login_pattern="lms_%cid", sync_stb=True):
+      if login_pattern != "":
+        self.login_pattern = login_pattern
+      self.sync_stb  = sync_stb
       self.api = Api(host, username, password, provider)
       return
     
@@ -54,13 +59,25 @@ class Synchronizator(object):
             cust_info = self.api.get_accounts(login)
         acc_sub = self.api.get_acc_subscription(cust_info['data'][0]['id'])['data']
         for sub, id in [(sub['tarif'], sub['id']) for sub in acc_sub]:
-            if sub in self.cust_plans[cust['customerid']]:
+            if cust['customerid'] in self.cust_plans and sub in self.cust_plans[cust['customerid']]:
                 self.cust_plans[cust['customerid']].remove(sub)
                 continue
             self.api.delete_acc_subscription(id)
         for plan in self.cust_plans[cust['customerid']]:
             if int(plan) not in [sub['tarif'] for sub in acc_sub]:
                 self.api.set_acc_subscription(cust_info['data'][0]['id'], plan)
+
+    def is_mac_address(self, unique_id):
+        """
+        This function checks if a string is formatted like a MAC address.
+        Args:
+            string: The string to check.
+
+        Returns:
+            True if the string is formatted like a MAC address, False otherwise.
+        """
+        pattern = "^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$"
+        return bool(re.match(pattern, unique_id))
 
     def devices_act(self, cust, cust_info, nodes):
         cust_devs = self.api.get_devices(cust_info['data'][0]['id'])['data']
@@ -77,6 +94,9 @@ class Synchronizator(object):
                 self.api.delete_device(device['data'][0]['id'])
             self.api.create_device(cust_info['data'][0]['id'], node)
         for cust_dev in cust_dev_list:
+            if not self.is_mac_address(cust_dev):
+                logger.debug("Skipping not decoder device %s", cust_dev)
+                continue
             if cust_dev in cust_nodes:
                 continue
             device = self.api.get_device_by_mac(cust_dev)
@@ -84,14 +104,13 @@ class Synchronizator(object):
 
     def set_dev_subs(self):
         account = set()
-        logger.info('Now\'s time for some device subscription magic...')
         for nodeid, mac in self.node_macs.items():
             device = self.api.get_device_by_mac(mac)
             if nodeid not in self.node_plans:
                 account.add(device['data'][0]['account'])
                 continue
             plan = self.node_plans[nodeid]
-            self.obrabotano.append(mac)
+            self.done.append(mac)
             account.add(device['data'][0]['account'])
             dev_sub = self.api.get_dev_subscription(device['data'][0]['id'])['data']
             substrat = [(sub['tarif'], sub['id']) for sub in dev_sub]
@@ -110,7 +129,7 @@ class Synchronizator(object):
         for acc in account:
             userdevs = [(id['id'],id['unique_id']) for id in self.api.get_devices(acc)['data']]
             for one_dev, one_mac in userdevs:
-                if one_mac in self.obrabotano:
+                if one_mac in self.done:
                     continue
                 subs = [sub['id'] for sub in self.api.get_dev_subscription(one_dev)['data']]
                 for sub in subs:
@@ -119,8 +138,9 @@ class Synchronizator(object):
 
     def purge_this(self):
         logger.info('Looking for something to remove')
+        login_const = self.login_pattern.replace('%cid', '')
         for tms_customer in self.api.get_accounts()['data']:
-            if 'lms' in tms_customer['login']:
+            if login_const in tms_customer['login']:
                 if tms_customer['login'] not in self.further_cust:
                     devices = self.api.get_devices(tms_customer['id'])
                     for each in devices['data']:
@@ -132,34 +152,47 @@ class Synchronizator(object):
 
     def delete_one(self, id):
         logger.info('Removing customer %s', id)
-        login = 'lms_{}'.format(str(id))
+        login = self.login_pattern.replace('%cid', str(id))
         try:
             tms_customer = self.api.get_accounts(login)
-            devices = self.api.get_devices(tms_customer['data'][0]['id'])
-            for each in devices['data']:
-                self.api.delete_device(each['id'])
+            if self.sync_stb:
+                devices = self.api.get_devices(tms_customer['data'][0]['id'])
+                for each in devices['data']:
+                    self.api.delete_device(each['id'])
+            else:
+                print("skipping devices sync, disabled in config")
             self.api.delete_account(tms_customer['data'][0]['id'])
             logger.info('Removed customer %s', tms_customer['data'][0]['login'])
         except IndexError:
             logger.info('Customer not found in TMS')
 
-    def sync_all(self, custonze, nodes):
+    def sync_all(self, custonze, nodes, updatable=False):
         for cust in custonze:
-            login = 'lms_{}'.format(str(cust['customerid']))
+            login = self.login_pattern.replace('%cid', str(cust['customerid']))
             self.further_cust.append(login)
             self.customer_act(cust, login)
             cust_info = self.api.get_accounts(login)
-            self.devices_act(cust, cust_info, nodes)
-        self.set_dev_subs()
-        if len(custonze) > 1:
+            if self.sync_stb:
+                self.devices_act(cust, cust_info, nodes)
+        if self.sync_stb:
+            self.set_dev_subs()
+        if updatable:
             self.purge_this()
 
-    def update(self, updatable):
-        for one in updatable:
-            self.cust_plans.clear()
-            self.node_plans.clear()
-            self.node_macs.clear()
-            self.obrabotano.clear()
-            self.further_cust.clear()
-            customers = self.get_all_customers(one)
-            self.sync_all(customers)
+    def sync_single(self, cust, nodes):
+        login = self.login_pattern.replace('%cid', str(cust['customerid']))
+        self.further_cust.append(login)
+        self.customer_act(cust, login)
+        cust_info = self.api.get_accounts(login)
+        if self.sync_stb:
+            self.devices_act(cust, cust_info, nodes)
+        if self.sync_stb:
+            self.set_dev_subs()
+
+    def update(self, customer, nodes):
+        self.cust_plans.clear()
+        self.node_plans.clear()
+        self.node_macs.clear()
+        self.done.clear()
+        self.further_cust.clear()
+        self.sync_all(customer, nodes)

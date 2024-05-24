@@ -1,0 +1,27 @@
+<div id="eta-tms-devices" data-label="{trans('TMS Devices')}" class="lms-ui-tab-container lms-ui-sortable">
+	<link href="/css/etatmssync/panelDevices.css?v=1712851393" rel="stylesheet" type="text/css" />
+	<div class="lms-ui-tab-header lmsbox-titlebar" data-lmsbox-content="eta-tms-devices-panel">
+		<div class="lms-ui-tab-header-cell">
+			<strong>TMS Devices:</strong>
+		</div>		
+		<div class="lms-ui-tab-header-cell">
+		</div>	
+	</div>
+	<div class="lms-ui-tab-contents lms-ui-multi-check" id="eta-tms-devices-panel" data-tmssync-customerid="{$customerinfo.id}" style="display:none">
+	</div>
+	<script>
+		(function () {
+			var state = getStorageItem("eta-tms-devices-panel", "local");
+			if (state == "1") {
+				$("#eta-tms-devices-panel").show()
+			} else {
+				if (getCookie("eta-tms-devices-panel") == "1") {
+					$("#eta-tms-devices-panel").show();
+					setCookie("eta-tms-devices-panel", "0", "0");
+					setStorageItem("eta-tms-devices-panel", "1", "local");
+				} 
+			}
+		})();
+	</script>
+	<script src="/js/etatmssync/panelDevices.js"></script>
+</div>

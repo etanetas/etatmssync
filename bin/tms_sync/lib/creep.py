@@ -1,26 +1,33 @@
 from lib.models import *
 from lib.synchronizator import Synchronizator
 import time
+import os
 import logging
 import pickle
 import traceback
 
+log_file = "/tmp/tms_sync.log"
 tms_plan = Tms_Plans.select()
 plans = {x.tmstarif: list(map(int, x.lmstarif.split(','))) for x in tms_plan}
-logging.basicConfig(filename='/var/log/tms_sync.log', format='%(asctime)s - %(levelname)s - %(message)s',
+logging.basicConfig(filename=log_file, format='%(asctime)s - %(levelname)s - %(message)s',
                     datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
 logging.getLogger('requests').setLevel(logging.WARNING)
 logging.getLogger('urllib3').setLevel(logging.WARNING)
-# logging.getLogger('peewee').setLevel(logging.DEBUG)
+
 logger = logging.getLogger(__name__)
 
 
 class Main(object):
-    #TODO: api init
+
     synchronizers = []
     cust_plans = {}
     node_plans = {}
     node_macs = {}
+
+    def __init__(self):
+        if not os.path.exists(log_file): 
+            with open(log_file, 'w') as file: 
+                pass
 
     def get_all_customers(self, id=None):
         """Get customers and node ids for specified tariffs. If ID is set, then select only one customer.
@@ -60,7 +67,6 @@ class Main(object):
                         self.node_plans.setdefault(each['nodeid'], set()).add(int(plan_type))
                     self.cust_plans.setdefault(each['customerid'], set()).add(int(plan_type))
                     customers_tar.append(each)
-                    # customers_tar = list({v['customerid']: v for v in customers_tar}.values())
                 customers += customers_tar
         customers = list({v['customerid']: v for v in customers}.values())
         logger.info('Customers fetched: %s', len(customers))
@@ -149,25 +155,36 @@ class Main(object):
     def main(self, args):
         tms_list = Tms_Settings.select()
         for tms in tms_list:
-            synchronizer = Synchronizator(tms.host, tms.user, tms.passwd, tms.provider)
+            synchronizer = Synchronizator(tms.host, tms.user, tms.passwd, tms.provider, tms.login_pattern, tms.sync_stb)
             self.synchronizers.append(synchronizer)
         try:
             start = time.time()
             if args.sync:
                 customers = self.get_all_customers(args.sync)
-                nodes = self.get_all_nodes(customers)
-                for s in self.synchronizers:
-                    s.set_cust_plans(self.cust_plans)
-                    s.set_node_plans(self.node_plans)
-                    s.set_node_macs(self.node_macs)
-                    s.sync_all(customers, nodes)
+                if len(customers) == 0:
+                    for s in self.synchronizers:
+                        s.delete_one(args.sync)
+                elif len(customers) == 1:
+                    nodes = self.get_all_nodes(customers)
+                    for s in self.synchronizers:
+                        s.set_cust_plans(self.cust_plans)
+                        s.set_node_plans(self.node_plans)
+                        s.set_node_macs(self.node_macs)
+                        s.sync_single(customers[0], nodes)
+                else:
+                    logger.error("To many customers found with id %s", args.sync)
+                    return
             elif args.update:
                 updatable = self.get_difference()
-                for s in self.synchronizers:
-                    s.set_cust_plans(self.cust_plans)
-                    s.set_node_plans(self.node_plans)
-                    s.set_node_macs(self.node_macs)
-                    s.update(updatable)
+                customers = []
+                for one in updatable:
+                    cust = self.get_all_customers(one)
+                    nodes = self.get_all_nodes(cust)
+                    for s in self.synchronizers:
+                        s.set_cust_plans(self.cust_plans)
+                        s.set_node_plans(self.node_plans)
+                        s.set_node_macs(self.node_macs)
+                        s.sync_all(cust, nodes)
             elif args.delete:
                 for s in self.synchronizers:
                     s.delete_one(args.delete)
@@ -178,7 +195,7 @@ class Main(object):
                     s.set_cust_plans(self.cust_plans)
                     s.set_node_plans(self.node_plans)
                     s.set_node_macs(self.node_macs)
-                    s.sync_all(customers, nodes)
+                    s.sync_all(customers, nodes, True)
             end = time.time()
             final = round(end-start, 1)
             logger.info('Process finished in %s sec', final)
@@ -186,3 +203,5 @@ class Main(object):
             lms_db.close()
             logger.error(traceback.format_exc())
             logger.error(err)
+        finally:
+            lms_db.close()

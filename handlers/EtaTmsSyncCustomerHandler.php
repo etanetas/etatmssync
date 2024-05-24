@@ -1,10 +1,5 @@
 <?php
 class EtaTmsSyncCustomerHandler {
-  /**
-   * Sets plugin managers
-   *
-   * @param LMS $hook_data Hook data
-   */
 
   public function customerEditAfterSubmit(array $hook_data = array()){
     EtaTmsSync::runCustomerSync($hook_data['customerdata']['id']);

@@ -1,1 +1,11 @@
-{extends file="layout.html"} {block name=title}TmsSync server management{/block} {block name=module_content} {literal}<link href="/css/etatmssync/83fb2fb7d9d340d87bf1.css" rel="stylesheet">{/literal}<h1>{$layout.pagetitle}</h1><div class="etatms_settings_view"><form method="post" id="settings"><div class="etatms_header">Tms Sync Settings</div>{foreach from=$settings key=k item=v} {if $k == "id"} <input type="hidden" value="{$v.value}" name="{$k}"> {else}<div class="etatms_row"><label><div class="etatms_column_label">{$v.label}</div>{if $v.label == "password"}<div class="etatms_column_value"><input class="etatms_input" type="password" name="{$k}" value="{$v.value}"></div>{else}<div class="etatms_column_value"><input class="etatms_input" type="text" name="{$k}" value="{$v.value}"></div>{/if}</label></div>{/if} {/foreach}<div class="etatms_row"><input class="etatms_button etatms_submit" type="submit" value="Submit"></div></form></div>{literal}<script src="/js/etatmssync/ef509416de2ffa09bd91.js"></script><script src="/js/etatmssync/83fb2fb7d9d340d87bf1.js"></script>{/literal} {/block}
+{extends file="layout.html"}
+{block name=title}TmsSync server management{/block}
+{block name=module_content}
+
+<link href="/css/etatmssync/config.css?v=1712851393" rel="stylesheet" type="text/css" />
+<H1>{$layout.pagetitle}</H1>
+<div id="etatms_config" class="etatms_settings_view">
+</div>
+<script src="/js/etatmssync/etatmssync.vendor.js?v=1712851393"></script>
+<script src="/js/etatmssync/config.js?v=1712851393"></script>
+{/block}

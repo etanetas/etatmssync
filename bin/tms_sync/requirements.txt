@@ -1,3 +1,7 @@
 peewee
+<<<<<<< HEAD
 psycopg2-binary
+=======
+# psycopg2-binary
+>>>>>>> development
 requests
