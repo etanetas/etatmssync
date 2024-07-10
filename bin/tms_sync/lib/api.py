@@ -2,6 +2,7 @@ from lib.models import Tms_Settings
 import requests
 import time
 import logging
+import os
 logger = logging.getLogger(__name__)
 
 class UnauthorizedException(Exception):
@@ -64,6 +65,7 @@ class Api(object):
     provider = 0
     url = '{}/api/provider/'.format(host)
     current_time = time.strftime('%Y-%m-%dT%H:%M:%S%z')
+    test_mode = False
 
     def log_format(self, message=""):
         new_message = "({}) ".format(self.host)
@@ -78,6 +80,9 @@ class Api(object):
             raise Exception("TMS username is missing")
         if provider == 0:
             raise Exception("TMS provider missing")
+        
+        if os.environ.get('TESTMODE') == '1':
+            self.test_mode = True
         
         self.host = host
         self.username = username
@@ -100,6 +105,10 @@ class Api(object):
         return response
     
     def post(self, url, data):
+        if self.test_mode:
+            print("[TEST MODE] Sending post request to url {}".format(url))
+            print(data)
+            return 
         headers = {'Content-Type': 'application/json'}
         response = requests.post(url, data.encode('utf-8'), auth=self.auth, headers=headers)
         if response.status_code == 401:
@@ -113,6 +122,9 @@ class Api(object):
         return response
     
     def delete(self, url):
+        if self.test_mode:
+            print("[TEST MODE] Sending delete request to url {}".format(url))
+            return
         response = requests.delete(url, auth=self.auth)
         if response.status_code == 401:
             raise UnauthorizedException(url, method="DELETE")

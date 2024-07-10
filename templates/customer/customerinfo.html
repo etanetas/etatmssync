@@ -1,4 +1,9 @@
 {block name="customernodesbox" append}
-    {include file="etatmssync/devices.inc.html"}
-    <script src="/js/etatmssync/etatmssync.vendor.js"></script>
+	{if ConfigHelper::checkPrivilege('full_access')
+		|| ConfigHelper::checkPrivilege('etatmssync_full_access')
+		|| ConfigHelper::checkPrivilege('etatmssync_device_manager')
+        || ConfigHelper::checkPrivilege('etatmssync_read_access')}
+        {include file="etatmssync/devices.inc.html"}
+        <script src="/js/etatmssync/etatmssync.vendor.js"></script>
+    {/if}
 {/block}
