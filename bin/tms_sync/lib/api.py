@@ -57,6 +57,14 @@ class ApiException(Exception):
             self.message += " Method: {}".format(method)
         super().__init__(self.message)
 
+class MockResponse:
+    def __init__(self, json_data={}, status_code=200):
+        self.status_code = status_code
+        self.json_data = json_data
+
+    def json(self):
+        return self.json_data
+
 class Api(object):
     cfg = Tms_Settings.get()
     username = ""
@@ -108,7 +116,7 @@ class Api(object):
         if self.test_mode:
             print("[TEST MODE] Sending post request to url {}".format(url))
             print(data)
-            return 
+            return MockResponse({}, 201)
         headers = {'Content-Type': 'application/json'}
         response = requests.post(url, data.encode('utf-8'), auth=self.auth, headers=headers)
         if response.status_code == 401:
@@ -124,7 +132,7 @@ class Api(object):
     def delete(self, url):
         if self.test_mode:
             print("[TEST MODE] Sending delete request to url {}".format(url))
-            return
+            return MockResponse({}, 200)
         response = requests.delete(url, auth=self.auth)
         if response.status_code == 401:
             raise UnauthorizedException(url, method="DELETE")
