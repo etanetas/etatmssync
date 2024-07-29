@@ -180,7 +180,6 @@ class Api(object):
         url = self.url + 'accounts'
         data = """{{
                   "id": {},
-                  "devices_per_account_limit": 10,
                   "enabled": {},
                   "fullname": "{}",
                   "login": "{}",
