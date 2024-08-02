@@ -103,6 +103,7 @@ class Main(object):
                     tvips.append(mac_addr)
                     self.node_macs[node['id']] = mac_addr
             customer_nodes[cust['customerid']] = tvips
+            cust['devices'] = len(tvips)
             count +=len(tvips)
         logger.info('Nodes fetched: %s', count)
         return customer_nodes
@@ -155,7 +156,7 @@ class Main(object):
     def main(self, args):
         tms_list = Tms_Settings.select()
         for tms in tms_list:
-            synchronizer = Synchronizator(tms.host, tms.user, tms.passwd, tms.provider, tms.login_pattern, tms.sync_stb)
+            synchronizer = Synchronizator(tms.host, tms.user, tms.passwd, tms.provider, tms.login_pattern, tms.sync_stb, tms.additional_devices)
             self.synchronizers.append(synchronizer)
         try:
             start = time.time()

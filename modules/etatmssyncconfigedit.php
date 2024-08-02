@@ -49,8 +49,12 @@
       $data['sync_stb'] = true;
     }
 
+    if (!isset($data['additional_devices'])) {
+      $data['additional_devices'] = -1;
+    }
+
     $tmsSync = new TMSSync();
-    $tmsSync->updateSettings($id, $data['host'], $data['user'], $data['passwd'], $data['provider'], $data['login_pattern'], $data['sync_stb']);
+    $tmsSync->updateSettings($id, $data['host'], $data['user'], $data['passwd'], $data['provider'], $data['login_pattern'], $data['sync_stb'], $data['additional_devices']);
   } catch (TMSApiException $e)  {
     if ($e->getCode() != 0) {
       http_response_code($e->getCode());

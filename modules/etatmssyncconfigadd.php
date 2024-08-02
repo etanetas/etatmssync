@@ -43,8 +43,12 @@ try {
     $data['login_pattern'] = true;
   }
 
+  if (!isset($data['additional_devices'])) {
+    $data['additional_devices'] = -1;
+  }
+
   $tmsSync = new TMSSync();
-  $tmsSync->insertSetting($data['host'], $data['user'], $data['passwd'], $data['provider'], $data['login_pattern'], $data['sync_stb']);
+  $tmsSync->insertSetting($data['host'], $data['user'], $data['passwd'], $data['provider'], $data['login_pattern'], $data['sync_stb'], $data['additional_devices']);
 } catch (TMSApiException $e)  {
   if ($e->getCode() != 0) {
     http_response_code($e->getCode());

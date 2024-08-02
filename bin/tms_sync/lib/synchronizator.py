@@ -13,10 +13,13 @@ class Synchronizator(object):
     further_cust = []
     login_pattern = "lms_%cid"
     sync_stb = True
+    additional_devices = -1
 
-    def __init__(self, host="", username="", password="", provider=0, login_pattern="lms_%cid", sync_stb=True):
+    def __init__(self, host="", username="", password="", provider=0, login_pattern="lms_%cid", sync_stb=True, additional_devices=-1):
       if login_pattern != "":
         self.login_pattern = login_pattern
+      if additional_devices != -1:
+        self.additional_devices = additional_devices
       self.sync_stb  = sync_stb
       self.api = Api(host, username, password, provider)
       return
@@ -36,7 +39,17 @@ class Synchronizator(object):
         name = '{} {}'.format(cust['lastname'], cust['name'])
         name = name.replace("\"","")
         name = name.replace("'","")
+        logger.info('Handling %s %s devices %d', cust['name'], login, cust['devices'])
         cust_info = self.api.get_accounts(login)
+        devices_count = -1
+        if self.additional_devices == -1:
+            devices_count = -1
+        else:
+            if self.sync_stb:
+                devices_count = cust['devices']
+            if self.additional_devices > 0:
+                devices_count += self.additional_devices
+
         if cust_info['total'] > 0:
             pin = hashlib.md5(cust['pin'].encode())
             pin = pin.hexdigest()
@@ -45,16 +58,17 @@ class Synchronizator(object):
                 modified = True
             if pin != cust_info['data'][0]['pin_md5']:
                 modified = True
+            if devices_count != cust_info['data'][0]['devices_per_account_limit']:
+                modified = True
             if modified:
-                self.api.modify_account(cust_info['data'][0]['id'], 'true', name, login, pin)
+                self.api.modify_account(cust_info['data'][0]['id'], 'true', name, login, pin, devices_count)
                 logger.info('%s %s modified', name, login)
             else:
                 logger.info("%s %s not changed",name, login)
         else:
             pin = hashlib.md5(cust['pin'].encode())
             pin = pin.hexdigest()
-
-            self.api.create_account(name, login, pin)
+            self.api.create_account(name, login, pin, devices_count)
             logger.info('%s %s created', name, login)
             cust_info = self.api.get_accounts(login)
         acc_sub = self.api.get_acc_subscription(cust_info['data'][0]['id'])['data']
@@ -78,6 +92,7 @@ class Synchronizator(object):
         """
         pattern = "^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$"
         return bool(re.match(pattern, unique_id))
+
 
     def devices_act(self, cust, cust_info, nodes):
         cust_devs = self.api.get_devices(cust_info['data'][0]['id'])['data']

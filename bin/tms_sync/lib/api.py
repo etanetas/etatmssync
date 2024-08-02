@@ -158,35 +158,56 @@ class Api(object):
         response = self.get(url)
         return response.json()
 
-    def create_account(self, fullname, login, pin):
+    def create_account(self, fullname, login, pin, devices_per_account_limit=-1):
         logger.info(self.log_format("Creating account {}".format(login)))
         url = self.url + 'accounts'
         if '"' in fullname:
             fullname = fullname.replace('"', '')
-        data = """{{
-                  "devices_per_account_limit": 10,
-                  "enabled": true,
-                  "fullname": "{}",
-                  "login": "{}",
-                  "pin_md5": "{}",
-                  "provider": {}
-        }}""".format(fullname, login, pin, self.provider)  # hashlib.md5('9113'.encode())  pin.hexdigest()
+        if devices_per_account_limit == -1:
+            data = """{{
+                      "enabled": true,
+                      "fullname": "{}",
+                      "login": "{}",
+                      "pin_md5": "{}",
+                      "provider": {}
+            }}""".format(fullname, login, pin, self.provider)
+        else:
+            data = """{{
+                      "enabled": true,
+                      "fullname": "{}",
+                      "login": "{}",
+                      "pin_md5": "{}",
+                      "provider": {},
+                      "devices_per_account_limit": {}
+            }}""".format(fullname, login, pin, self.provider, devices_per_account_limit)
         response = self.post(url, data)
         logger.info(self.log_format("Account {} created".format(login)))
         return response.json()
 
-    def modify_account(self, client_id, state, fullname, login, pin):
+    def modify_account(self, client_id, state, fullname, login, pin, devices_per_account_limit=-1):
         logger.info(self.log_format("Modifing account {}".format(client_id)))
         url = self.url + 'accounts'
-        data = """{{
-                  "id": {},
-                  "enabled": {},
-                  "fullname": "{}",
-                  "login": "{}",
-                  "pin_md5": "{}",
-                  "provider": {}
-        }}""".format(client_id, state, fullname, login, pin,
-                     self.provider)  # hashlib.md5('9113'.encode())  pin.hexdigest()
+        if devices_per_account_limit == -1:
+            data = """{{
+                      "id": {},
+                      "enabled": {},
+                      "fullname": "{}",
+                      "login": "{}",
+                      "pin_md5": "{}",
+                      "provider": {}
+            }}""".format(client_id, state, fullname, login, pin,
+                         self.provider)
+        else:
+            data = """{{
+                      "id": {},
+                      "enabled": {},
+                      "fullname": "{}",
+                      "login": "{}",
+                      "pin_md5": "{}",
+                      "provider": {},
+                      "devices_per_account_limit": {}
+            }}""".format(client_id, state, fullname, login, pin,
+                         self.provider, devices_per_account_limit)
         response = self.post(url, data)
         logger.info(self.log_format("Account {} modified".format(client_id)))
         return response.json()

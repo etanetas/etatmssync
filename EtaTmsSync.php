@@ -12,7 +12,7 @@ class EtaTmsSync extends LMSPlugin {
 	const PLUGIN_NAME = 'Tms Sync';
 	const PLUGIN_DESCRIPTION = 'Etanetas plugin for lms->tms synchronization';
     const PLUGIN_AUTHOR = 'Ksistof Vinco';
-    const PLUGIN_DB_VERSION = '2024051100';
+    const PLUGIN_DB_VERSION = '2024073100';
 
     public static $plugindir = null;
     

@@ -34,15 +34,15 @@
       }
     }
 
-    public function updateSettings($id, $host, $user, $password, $provider, $login_pattern, $sync_stb){
+    public function updateSettings($id, $host, $user, $password, $provider, $login_pattern, $sync_stb, $additional_devices){
       $this->validateLoginPattern($login_pattern);
       if ($sync_stb == true) {
         $sync_stb = 't';
       } else {
         $sync_stb = 'f';
       }
-      $query = "UPDATE tms_settings SET \"host\" = ?, \"user\" = ?, \"passwd\" = ?, \"provider\" = ?, \"login_pattern\" = ?, \"sync_stb\" = ? where id = ?";
-      $params = array($host, $user, $password, $provider, $login_pattern, $sync_stb, $id);
+      $query = "UPDATE tms_settings SET \"host\" = ?, \"user\" = ?, \"passwd\" = ?, \"provider\" = ?, \"login_pattern\" = ?, \"sync_stb\" = ?, \"additional_devices\" = ? where id = ?";
+      $params = array($host, $user, $password, $provider, $login_pattern, $sync_stb, $additional_devices, $id);
       $res = $this->db->Exec($query, $params);
       $errors = $this->db->GetErrors();
       if ($errors){
@@ -55,15 +55,15 @@
       return $res;
     }
 
-    public function insertSetting($host, $user, $password, $provider, $login_pattern, $sync_stb){
+    public function insertSetting($host, $user, $password, $provider, $login_pattern, $sync_stb, $additional_devices){
       $this->validateLoginPattern($login_pattern);
       if ($sync_stb == true) {
         $sync_stb = 't';
       } else {
         $sync_stb = 'f';
       }
-      $query = 'INSERT INTO tms_settings ("host","user","passwd","provider","login_pattern","sync_stb") VALUES (?,?,?,?,?,?)';
-      $res = $this->db->Exec($query, array($host, $user, $password, $provider, $login_pattern, $sync_stb));
+      $query = 'INSERT INTO tms_settings ("host","user","passwd","provider","login_pattern","sync_stb", "additional_devices") VALUES (?,?,?,?,?,?,?)';
+      $res = $this->db->Exec($query, array($host, $user, $password, $provider, $login_pattern, $sync_stb, $additional_devices));
       $errors = $this->db->GetErrors();
       if ($errors) {
         $error_msg = "DB Errors:";

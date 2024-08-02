@@ -69,12 +69,11 @@ class Tms_Settings(BaseModel):
     provider = IntegerField()
     login_pattern = CharField()
     sync_stb = BooleanField()
-
+    additional_devices = IntegerField()
 
 class Tms_Plans(BaseModel):
     tmstarif = CharField()
     lmstarif = CharField()
-
 
 try:
     lms_db.connect(reuse_if_open=True)
