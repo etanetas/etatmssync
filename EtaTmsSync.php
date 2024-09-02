@@ -103,7 +103,9 @@ class EtaTmsSync extends LMSPlugin {
             $cmd = "";
             if($customerid){
                 $cmd = sprintf(ETATMSBIN," -s $customerid");
-                exec($cmd, $out, $return_code);
+                $ss = exec($cmd, $out, $return_code);
+              
+                /*error_log("cmd: $cmd, return_code: $return_code, out: ".implode(" ", $out));*/
                 if($return_code != 0){
                     error_log("ETATMSSYNC Error: Failed to run $cmd,\n returned code: $return_code,\n output: ".implode(" ", $out));
                 }

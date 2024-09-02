@@ -6,7 +6,7 @@ import logging
 import pickle
 import traceback
 
-log_file = "/tmp/tms_sync.log"
+log_file = "/var/log/tmssync.log"
 tms_plan = Tms_Plans.select()
 plans = {x.tmstarif: list(map(int, x.lmstarif.split(','))) for x in tms_plan}
 logging.basicConfig(filename=log_file, format='%(asctime)s - %(levelname)s - %(message)s',
