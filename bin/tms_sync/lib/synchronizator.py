@@ -1,9 +1,10 @@
 import logging
 from lib.api import Api
+from lib.log import getLogger
 import hashlib
 import re
 
-logger = logging.getLogger(__name__)
+logger = getLogger()
 
 class Synchronizator(object):
     cust_plans = {}

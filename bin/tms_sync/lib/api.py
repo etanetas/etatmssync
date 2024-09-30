@@ -1,9 +1,10 @@
 from lib.models import Tms_Settings
+from lib.log import getLogger
 import requests
 import time
-import logging
 import os
-logger = logging.getLogger(__name__)
+
+logger = getLogger()
 
 class UnauthorizedException(Exception):
     def __init__(self, url="", data="", method="", message=""):

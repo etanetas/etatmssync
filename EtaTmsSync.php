@@ -22,7 +22,7 @@ class EtaTmsSync extends LMSPlugin {
         $configfile = file_exists(getcwd().DIRECTORY_SEPARATOR.'lms.ini') ? getcwd().DIRECTORY_SEPARATOR.'lms.ini' : "/etc/lms/lms.ini";
 
         define('ETATMSBINSTDOUT', "export LANG=en_US.UTF-8 && " . dirname(__FILE__). DIRECTORY_SEPARATOR .'bin' . DIRECTORY_SEPARATOR. "tms_sync".DIRECTORY_SEPARATOR."sync.py");
-        define('ETATMSBIN', "export LANG=en_US.UTF-8 && " . dirname(__FILE__). DIRECTORY_SEPARATOR .'bin' . DIRECTORY_SEPARATOR . "tms_sync".DIRECTORY_SEPARATOR."sync.py -c $configfile %s > /dev/null 2>&1 &");
+        define('ETATMSBIN', "export LANG=en_US.UTF-8 && nohup " . dirname(__FILE__). DIRECTORY_SEPARATOR .'bin' . DIRECTORY_SEPARATOR . "tms_sync".DIRECTORY_SEPARATOR."sync.py -c $configfile %s > /dev/null 2>&1 &");
 
         $this->handlers = array(
             'access_table_initialized' => array(
@@ -103,9 +103,7 @@ class EtaTmsSync extends LMSPlugin {
             $cmd = "";
             if($customerid){
                 $cmd = sprintf(ETATMSBIN," -s $customerid");
-                $ss = exec($cmd, $out, $return_code);
-              
-                /*error_log("cmd: $cmd, return_code: $return_code, out: ".implode(" ", $out));*/
+                exec($cmd, $out, $return_code);
                 if($return_code != 0){
                     error_log("ETATMSSYNC Error: Failed to run $cmd,\n returned code: $return_code,\n output: ".implode(" ", $out));
                 }

@@ -1,21 +1,19 @@
 from lib.models import *
 from lib.synchronizator import Synchronizator
+from lib.log import getLogger
 import time
 import os
-import logging
 import pickle
 import traceback
+import logging
 
-log_file = "/var/log/tmssync.log"
+
 tms_plan = Tms_Plans.select()
 plans = {x.tmstarif: list(map(int, x.lmstarif.split(','))) for x in tms_plan}
-logging.basicConfig(filename=log_file, format='%(asctime)s - %(levelname)s - %(message)s',
-                    datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
+
 logging.getLogger('requests').setLevel(logging.WARNING)
 logging.getLogger('urllib3').setLevel(logging.WARNING)
-
-logger = logging.getLogger(__name__)
-
+logger = getLogger()
 
 class Main(object):
 
@@ -25,9 +23,10 @@ class Main(object):
     node_macs = {}
 
     def __init__(self):
-        if not os.path.exists(log_file): 
-            with open(log_file, 'w') as file: 
-                pass
+        pass
+        # if not os.path.exists(log_file): 
+        #     with open(log_file, 'w') as file: 
+        #         pass
 
     def get_all_customers(self, id=None):
         """Get customers and node ids for specified tariffs. If ID is set, then select only one customer.

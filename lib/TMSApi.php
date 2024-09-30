@@ -118,6 +118,7 @@ class TMSApi {
   } 
 
   public function getAccountByLogin($login){
+    $id = $this->provider;
     $url = $this->url."/api/provider/accounts?provider=$id&login=$login";
     $data = json_decode($this->get($url), true);
     if ($data['data'] && count($data['data']) > 0) {
