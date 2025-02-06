@@ -10,7 +10,7 @@
     $tms_settings = $tmsSync->getSettings();
     if ($tms_settings == NULL){
       if (!$tms_settings || count($tms_settings) < 1) {
-        error_log("Failed to get tms settings");
+        error_log("ETATMSSYNC Error: Failed to get tms settings");
         http_response_code(500);
         json_encode(array("error" => "Failed to get tms settings"));
         return;
@@ -29,7 +29,12 @@
     }
     echo json_encode(array("error" => $e->getMessage()));
   } catch (Exception $e){
-    var_dump("Exception");
+    error_log("ETATMSSYNC Error: $e");
+    $err = array(
+      "error" => "Server error",
+      "detail" => $e->getMessage()
+    );
+    http_response_code(500);
+    echo json_encode($err);
   }
-
 ?>

@@ -10,8 +10,6 @@ function filterTmsTariffByID($tmsTariffs, $id) {
 }
 
 try{
-
-
   $tmsSync = new TMSSync();
   $tms_settings = $tmsSync->getSettings();
   if ($tms_settings == NULL){
@@ -52,6 +50,7 @@ try{
   http_response_code(500);
   echo json_encode($err);
 } catch (Error $e) {
+  error_log("ETATMSSYNC Error: $e");
   $err = array(
     "error" => "Server error",
     "detail" => $e->getMessage()

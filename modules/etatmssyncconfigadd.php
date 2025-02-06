@@ -35,12 +35,13 @@ try {
     echo json_encode(array("error" => "Provider is requried"));
     return;
   }
+
   if (!isset($data['login_pattern']) || $data['login_pattern'] == "") {
     $data['login_pattern'] = "lms_%cid";
   }
 
   if (!isset($data['sync_stb'])) {
-    $data['login_pattern'] = true;
+    $data['stb_sync'] = true;
   }
 
   if (!isset($data['additional_devices'])) {
@@ -64,6 +65,7 @@ try {
   http_response_code(500);
   echo json_encode($err);
 } catch (Error $e) {
+  error_log("ETATMSSYNC Error: $e");
   $err = array(
     "error" => "Server error",
     "detail" => $e->getMessage()

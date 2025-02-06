@@ -9,6 +9,11 @@
 3. Utworzyć dowiązanie symboliczne w katalogu js LMS-a o nazwie etatmssync do katalogu ../plugins/EtaTmsSync/js.
 4. Utworzyć dowiązanie symboliczne w katalogu css LMS-a o nazwie etatmssync do katalogu ../plugins/EtaTmsSync/css.
 5. Zainstalować wymagane pakiety z bin/tms_sync/requirements.txt (pip3 install -r bin/tms_sync/requirements.txt)
+6. Konfiguracja SELinux: Zezwolenie na uruchamianie skryptów przez serwer www
+```
+  semanage fcontext -a -t httpd_sys_script_exec_t "/var/www/html/lmsplus/plugins/EtaTmsSync/bin(/.*)?"
+  restorecon -R /var/www/html/lmsplus/plugins/EtaTmsSync/bin
+```
 
 # Konfiguracja
 W sekcji menu TMS Sync -> Configurations ustawiamy dane do serwera TMS.

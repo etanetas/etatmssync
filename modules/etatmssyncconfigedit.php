@@ -70,6 +70,7 @@
     http_response_code(500);
     echo json_encode($err);
   } catch (Error $e) {
+    error_log("ETATMSSYNC Error: $e");
     $err = array(
       "error" => "Server error",
       "detail" => $e->getMessage()

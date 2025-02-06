@@ -16,8 +16,8 @@
         }
         throw new Exception($error_msg);
       }
-      if(count($settings)<1){
-        return ;
+      if(!$settings || count($settings)<1){
+        return;
       } else {
         if ($settings[0]['sync_stb'] == "t"){
           $settings[0]['sync_stb'] = true;

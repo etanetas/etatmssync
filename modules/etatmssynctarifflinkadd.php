@@ -29,7 +29,6 @@ try{
   $id = $tmsSync->insertTariffLink($tms_tariff_id, $lms_tariff_ids);
 
   http_response_code(201);
-  echo json_encode($tariffLinks);
 } catch (TMSApiException $e)  {
   if ($e->getCode() != 0) {
     http_response_code($e->getCode());
@@ -46,6 +45,7 @@ try{
   http_response_code(500);
   echo json_encode($err);
 } catch (Error $e) {
+  error_log("ETATMSSYNC Error: $e");
   $err = array(
     "error" => "Server error",
     "detail" => $e->getMessage()

@@ -28,10 +28,7 @@ try{
   }
 
   $lms_tariff_ids = substr($lms_tariff_ids, 0, -1);
-
   $tmsSync->updateTariffLink($link_id, $tms_tariff_id, $lms_tariff_ids);
-
-  echo json_encode($tariffLinks);
 } catch (TMSApiException $e)  {
   if ($e->getCode() != 0) {
     http_response_code($e->getCode());

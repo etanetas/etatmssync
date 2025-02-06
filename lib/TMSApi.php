@@ -123,6 +123,8 @@ class TMSApi {
     $data = json_decode($this->get($url), true);
     if ($data['data'] && count($data['data']) > 0) {
       $account = $data['data'][0];
+    } else {
+      $account = "";
     }
     return $account;
   } 

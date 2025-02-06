@@ -35,8 +35,13 @@
     }
     echo json_encode(array("error" => $e->getMessage()));
   } catch (Exception $e){
+    error_log("ETATMSSYNC Error: $e");
+    $err = array(
+      "error" => "Server error",
+      "detail" => $e->getMessage()
+    );
     http_response_code(500);
-    echo json_encode(array("error" => "Server error"));
+    echo json_encode($err);
   }
 
 ?>
