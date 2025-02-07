@@ -195,7 +195,8 @@ class Api(object):
                       "fullname": "{}",
                       "login": "{}",
                       "pin_md5": "{}",
-                      "provider": {}
+                      "provider": {},
+                      "devices_per_account_limit": ""
             }}""".format(client_id, state, fullname, login, pin,
                          self.provider)
         else:
@@ -277,7 +278,8 @@ class Api(object):
         data = """{{
                   "account": {},
                   "provider": {},
-                  "unique_id": "{}"
+                  "unique_id": "{}",
+                  "ws_connected": false
         }}""".format(client_id, self.provider, mac)
         response = self.post(url, data)
         logger.info(self.log_format("Account {} device with unique_id {} created".format(client_id, mac)))

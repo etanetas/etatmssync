@@ -51,16 +51,24 @@ class Synchronizator(object):
             if self.additional_devices > 0:
                 devices_count += self.additional_devices
 
+
         if cust_info['total'] > 0:
             pin = hashlib.md5(cust['pin'].encode())
             pin = pin.hexdigest()
             modified = False
+            if devices_count == -1:
+                compare_devices_count = None
+            else:
+                compare_devices_count = devices_count
             if name != cust_info['data'][0]['fullname']:
                 modified = True
+                logger.debug("Name changed from %s to %s", cust_info['data'][0]['fullname'], name)
             if pin != cust_info['data'][0]['pin_md5']:
                 modified = True
-            if devices_count != cust_info['data'][0]['devices_per_account_limit']:
+                logger.debug("Pin changed from %s to %s", cust_info['data'][0]['pin_md5'], pin)
+            if compare_devices_count != cust_info['data'][0]['devices_per_account_limit']:
                 modified = True
+                logger.debug("Devices count changed from %s to %s", cust_info['data'][0]['devices_per_account_limit'], devices_count)
             if modified:
                 self.api.modify_account(cust_info['data'][0]['id'], 'true', name, login, pin, devices_count)
                 logger.info('%s %s modified', name, login)
@@ -154,9 +162,11 @@ class Synchronizator(object):
 
     def purge_this(self):
         logger.info('Looking for something to remove')
-        login_const = self.login_pattern.replace('%cid', '')
+        # login_const = self.login_pattern.replace('%cid', '')
+        login_pattern = re.compile(self.login_pattern.replace("%cid", r"\d+"))
+
         for tms_customer in self.api.get_accounts()['data']:
-            if login_const in tms_customer['login']:
+            if bool(login_pattern.fullmatch(tms_customer['login'])):
                 if tms_customer['login'] not in self.further_cust:
                     devices = self.api.get_devices(tms_customer['id'])
                     for each in devices['data']:

@@ -29,7 +29,7 @@
     }
 
     private function validateLoginPattern($login_pattern){
-      if (strpos($login_pattern, "%cid") == false){
+      if (strpos($login_pattern, "%cid") === false){
         throw new Exception("Login pattern incorrect. Must contain '%cid'");
       }
     }
